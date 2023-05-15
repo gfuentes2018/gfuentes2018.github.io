@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Postalea</title>
+  <style>
+    .postal-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .texto-postal {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 20px;
+      font-family: sans-serif;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      max-width: 50%;
+    }
+
+    .imagen-postal {
+      max-width: 100%;
+    }
+    /* Estilos para el texto */
+    p {
+      font-size: 16px;
+    }
+    
+  </style>
+</head>
+<body>
+  <h1>Postalea</h1>
+  <h3>Tu página web de envío de postales preferida</h3>
+  <form id="formulario">
+    <label for="tamanio">Elige un tamanio para el texto:</label>
+    <select id="tamanio" onchange="cambiarTamanio()">
+      <option value="16">Pequenio</option>
+      <option value="24">Mediano</option>
+      <option value="32">Grande</option>
+    </select>
+    <h4>Rellena el siguiente formulario, y pulsa en "Crear y enviar postal" para crear tu postal definitiva</h4>
+    <h2>Formulario de envío de postal:</h2>
+    <p id="texto"><label for="autor">De:</label>
+    <input type="text" id="autor" name="autor"><br><br>
+
+    <label for="destinatario">Destinatario:</label>
+    <input type="text" id="destinatario" name="destinatario"><br><br>
+
+    <label for="direccion">Dirección:</label>
+    <input type="text" id="direccion" name="direccion"><br><br>
+
+    <label for="ciudad">Ciudad:</label>
+    <input type="text" id="ciudad" name="ciudad"><br><br>
+
+    <label for="estado">Estado:</label>
+    <input type="text" id="estado" name="estado"><br><br>
+
+    <label for="codigo-postal">Código postal:</label>
+    <input type="text" id="codigo-postal" name="codigo-postal"><br><br>
+
+    <label for="tema">Tema:</label>
+    <select id="tema" name="tema">
+      <option value="Vacaciones">Vacaciones</option>
+      <option value="Trabajo">Trabajo</option>
+      <option value="Navidad">Navidad</option>
+      <option value="Aniversario">Aniversario</option>
+    </select><br><br>
+
+    <label for="Recomendaciones">Recomendaciones:</label>
+    <input type="checkbox" id="Recomendacion1" name="Recomendacion1" value="Veas el monumento, es precioso"> Ver el monumento
+    <input type="checkbox" id="Recomendacion2" name="Recomendacion2" value="Venir aquí, te lo pasarás genial"> Ir aquí
+    <input type="checkbox" id="Recomendacion3" name="Recomendacion3" value="Comer aquí, todo está riquísimo"> Comer aquí<br><br>
+
+    <label for="mensaje">Mensaje:</label><br>
+    <textarea id="mensaje" name="mensaje" rows="4" cols="50"></textarea><br><br>
+
+    <label for="imagen">Seleccionar imagen:</label>
+    <input type="file" id="imagen" name="imagen"><br><br>
+
+    <button type="button" onclick="crearPostal()">Crear y enviar postal</button></p>
+  </form>
+
+  <div id="postal" style="display:none;">
+    <button type="button" onclick="volver()">Volver al formulario</button>
+    <div class="postal-container">
+      <img id="imagen-postal" src="#" alt="Postal">
+      <div id="texto-postal" class="texto-postal"></div>
+    </div>
+  </div>
+
+<script>
+function crearPostal() {
+    let autor = document.getElementById('autor').value;
+    let destinatario = document.getElementById('destinatario').value;
+    let direccion = document.getElementById('direccion').value;
+    let ciudad = document.getElementById('ciudad').value;
+    let estado = document.getElementById('estado').value;
+    let codigoPostal = document.getElementById('codigo-postal').value;
+    let mensaje = document.getElementById('mensaje').value;
+    let imagen = document.getElementById('imagen').files[0];
+    let tema = document.getElementById('tema').value;
+
+    let Recomendacion1 = document.getElementById('Recomendacion1').checked ? "Veas el monumento, es precioso" : "";
+    let Recomendacion2 = document.getElementById('Recomendacion2').checked ? "Vengas aquí, te lo pasarás genial" : "";
+    let Recomendacion3 = document.getElementById('Recomendacion3').checked ? "Comas aquí, todo está riquísimo" : "";
+
+    let Recomendaciones = [Recomendacion1, Recomendacion2, Recomendacion3].filter(Boolean).join(", ");
+
+    let reader = new FileReader();
+    reader.onload = function() {
+        let imagenPostal = document.getElementById('imagen-postal');
+        imagenPostal.src = reader.result;
+        imagenPostal.alt = `Postal temática de ${tema}`;
+
+        let textoPostal = document.getElementById('texto-postal');
+        textoPostal.innerHTML = `
+            <p>Estimado ${destinatario},</p>
+            <p>¡Saludos desde ${ciudad}, ${estado}!</p>
+            <p>${mensaje}</p>
+            <p>Te recomiendo que ${Recomendaciones}</p>
+            <p>Atentamente,tu mejor amig@ ~${autor}</p>
+        `;
+
+        let postal = document.getElementById('postal');
+        postal.style.display = 'flex';
+        postal.style.flexDirection = 'column';
+    }
+    reader.readAsDataURL(imagen);
+
+    let formulario = document.getElementById('formulario');
+    formulario.style.display = 'none';
+}
+
+function volver() {
+    let formulario = document.getElementById('formulario');
+    formulario.style.display = 'block';
+
+    let postal = document.getElementById('postal');
+    postal.style.display = 'none';
+}
+
+function cambiarTamanio() {
+  // Obtener el valor seleccionado en el menú desplegable
+  let tamanio = document.getElementById('tamanio').value;
+
+  // Cambiar el tamaño del texto
+  document.getElementById('texto').style.fontSize = tamanio + 'px';
+}
+  
+</script>
+
